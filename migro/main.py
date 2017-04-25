@@ -91,7 +91,7 @@ def checkout(config: dict, arg: str):
             raise RevisionNotFound(arg)
 
     if next_rev_index == curr_rev_index:
-        raise AlreadyHere
+        AlreadyHere()
 
     if next_rev_index > curr_rev_index:  # Upgrading
         for rev_index in range(curr_rev_index + 1, next_rev_index + 1):
