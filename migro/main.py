@@ -11,7 +11,7 @@ from .exceptions import (RevisionNotFound, RevisionAlreadyExists,
 
 
 def init(directory: str):
-    print('Creating directory', directory)
+    print(('Creating directory', directory))
     os.mkdir(directory)
     print('Creating file migro.yaml')
     with open('migro.yaml', 'w') as file:
@@ -33,7 +33,7 @@ def current(config: dict):
     if curr_rev is None:
         raise RevisionNotFound(curr_rev_id)
 
-    print(curr_rev['revision'], ':', curr_rev['description'])
+    print((curr_rev['revision'], ':', curr_rev['description']))
 
     curs.close()
     conn.close()
@@ -61,7 +61,7 @@ def revision(config: dict, message: str):
                 message, new_rev_id,
                 latest_rev_id if latest_rev_id is not None else 'null'))
 
-    print('Created revision at %s' % new_rev_filename)
+    print(('Created revision at %s' % new_rev_filename))
 
 
 def checkout(config: dict, arg: str):
@@ -95,8 +95,8 @@ def checkout(config: dict, arg: str):
 
     if next_rev_index > curr_rev_index:  # Upgrading
         for rev_index in range(curr_rev_index + 1, next_rev_index + 1):
-            print('Upgrading to', revisions[rev_index]['revision'], ':',
-                  revisions[rev_index]['description'])
+            print(('Upgrading to', revisions[rev_index]['revision'], ':',
+                  revisions[rev_index]['description']))
 
             curs.execute(revisions[rev_index]['upgrade'])
             curs.execute(
@@ -105,8 +105,8 @@ def checkout(config: dict, arg: str):
             conn.commit()
     else:  # Downgrading
         for rev_index in range(curr_rev_index, next_rev_index, -1):
-            print('Downgrading from', revisions[rev_index]['revision'], ':',
-                  revisions[rev_index]['description'])
+            print(('Downgrading from', revisions[rev_index]['revision'], ':',
+                  revisions[rev_index]['description']))
 
             curs.execute(revisions[rev_index]['downgrade'])
             curs.execute("TRUNCATE TABLE migro_ver;")
@@ -132,8 +132,8 @@ def reapply(config: dict):
     if curr_rev_index is None:
         raise RevisionNotFound(curr_rev_id)
 
-    print('Reapplying', revisions[curr_rev_index]['revision'], ':',
-          revisions[curr_rev_index]['description'])
+    print(('Reapplying', revisions[curr_rev_index]['revision'], ':',
+          revisions[curr_rev_index]['description']))
 
     curs.execute(revisions[curr_rev_index]['downgrade'])
     curs.execute(revisions[curr_rev_index]['upgrade'])
@@ -148,6 +148,6 @@ def show(config: dict):
     curr_rev_id = utils.get_curr_rev_id(conn)
 
     for rev in revisions:
-        print('[%s]' % ('x' if curr_rev_id == rev['revision'] else ' '),
-              rev['revision'], ':', rev['description'])
+        print(('[%s]' % ('x' if curr_rev_id == rev['revision'] else ' '),
+              rev['revision'], ':', rev['description']))
 
